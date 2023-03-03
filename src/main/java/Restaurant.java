@@ -1,3 +1,4 @@
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,27 +18,18 @@ public class Restaurant {
     }
 
     public boolean isRestaurantOpen() {
-        return getCurrentTime().isBefore(closingTime) && getCurrentTime().isAfter(openingTime);
-        //DELETE ABOVE STATEMENT AND WRITE CODE HERE
+
+        return getCurrentRestaurantTime().isBefore(closingTime)&& getCurrentRestaurantTime().isAfter(openingTime);
+
     }
 
-    public LocalTime getCurrentTime(){ return  LocalTime.now(); }
+    public LocalTime getCurrentRestaurantTime(){ return  LocalTime.now(); }
 
     public List<Item> getMenu() {
         return menu;
         //DELETE ABOVE RETURN STATEMENT AND WRITE CODE HERE
     }
-    public LocalTime getOpeningTime() { return openingTime; }
 
-    public void setOpeningTime(LocalTime openingTime) {
-        this.openingTime = openingTime;
-    }
-
-    public LocalTime getClosingTime() { return closingTime; }
-
-    public void setClosingTime(LocalTime closingTime) {
-        this.closingTime = closingTime;
-    }
     private Item findItemByName(String itemName){
         for(Item item: menu) {
             if(item.getName().equals(itemName))
@@ -71,11 +63,20 @@ public class Restaurant {
     public String getName() {
         return name;
     }
-    public int getOrderValue(List<Item> item){
-        int totalValue = 0;
-        for (Item myItem : item) {
-            totalValue += myItem.getPrice();
+
+    public int getTotalOrderValue(List<String> selectedItems) throws itemNotFoundException {
+        int totalOrderValue = 0;
+
+        for(String itemName: selectedItems) {
+            Item item = findItemByName(itemName);
+            if(item == null)
+                throw new itemNotFoundException(itemName);
+            totalOrderValue += item.getPrice();
         }
-        return totalValue;
+
+        return totalOrderValue;
+
     }
+
+
 }
